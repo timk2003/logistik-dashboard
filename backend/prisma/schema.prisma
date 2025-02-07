@@ -1,0 +1,18 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Lieferschein {
+  id         Int    @id @default(autoincrement())
+  lieferant  String
+  torNummer  String
+  kennzeichen String
+  fahrerName String
+  gewicht    Float
+  createdAt  DateTime @default(now())
+}
