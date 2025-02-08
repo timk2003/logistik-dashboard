@@ -1,3 +1,4 @@
+import React from 'react';
 function Dashboard() {
   const username = localStorage.getItem('username'); // Benutzername aus dem Local Storage abrufen (optional)
 

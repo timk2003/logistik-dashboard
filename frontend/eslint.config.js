@@ -5,8 +5,14 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
+  
   { ignores: ['dist'] },
   {
+    env: {
+      browser: true, // Für Browser-Umgebung
+      es2021: true,
+      node: true,   // Für Node.js-Umgebung (wichtig!)
+    },
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2020,
