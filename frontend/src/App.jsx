@@ -8,6 +8,7 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<LoginForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        {/* Weitere Routen hier */}
       </Routes>
     </Router>
   );
