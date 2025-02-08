@@ -1,11 +1,17 @@
 const express = require('express');
-const authRoutes = require('./routes/auth');
+const cors = require('cors'); // Für Cross-Origin-Anfragen (wichtig für die Entwicklung)
+const authRoutes = require('./routes/auth'); // Deine Auth-Routen
+const { PrismaClient } = require('@prisma/client');
 
 const app = express();
+const port = process.env.PORT || 5000;
+const prisma = new PrismaClient();
 
-app.use(express.json()); // Für JSON-Daten im Request-Body
+app.use(cors());
+app.use(express.json()); // Für das Parsen von JSON-Daten
 
-app.use('/api/auth', authRoutes); // Auth-Routen
+app.use('/api/auth', authRoutes); // Verwende deine Auth-Routen
 
-const PORT = 5000;
-app.listen(PORT, () => console.log(`🚀 Server läuft auf http://localhost:${PORT}`));
+app.listen(port, () => {
+  console.log(`Server läuft auf Port ${port}`);
+});

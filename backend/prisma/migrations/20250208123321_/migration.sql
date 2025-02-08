@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Lieferschein" ALTER COLUMN "ausgang" DROP DEFAULT,
+ALTER COLUMN "eingang" DROP DEFAULT,
+ALTER COLUMN "kfzKennzeichen" DROP DEFAULT,
+ALTER COLUMN "lfdNr" DROP DEFAULT;

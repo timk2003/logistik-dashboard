@@ -1,20 +1,17 @@
 const jwt = require('jsonwebtoken');
 
-// Middleware, um geschützte Routen zu sichern
-const protect = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+module.exports = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1]; // Extrahiere den Token aus dem Header
 
   if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' });
+    return res.status(401).json({ error: 'Kein Token, Autorisierung abgelehnt' });
   }
 
   try {
-    const decoded = jwt.verify(token, 'SECRET_KEY');
-    req.user = decoded;
-    next();
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded.userId; // Füge die Benutzer-ID zur Anfrage hinzu
+    next(); // Erlaube den Zugriff auf die nächste Funktion
   } catch (error) {
-    return res.status(401).json({ message: 'Token is not valid' });
+    res.status(401).json({ error: 'Token ist ungültig' });
   }
 };
-
-module.exports = { protect };

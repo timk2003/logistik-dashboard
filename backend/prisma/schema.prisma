@@ -8,11 +8,16 @@ generator client {
 }
 
 model Lieferschein {
-  id         Int    @id @default(autoincrement())
-  lieferant  String
-  torNummer  String
-  kennzeichen String
-  fahrerName String
-  gewicht    Float
-  createdAt  DateTime @default(now())
+  id           String   @id @default(uuid())
+  lfdNr        Int
+  eingang      DateTime
+  ausgang      DateTime
+  kfzKennzeichen String
+  container    String?
+  bin          String?
+  ladung       String?
+  fahrerName   String
+  bemerkung    String?
+  createdAt    DateTime @default(now())
 }
+
