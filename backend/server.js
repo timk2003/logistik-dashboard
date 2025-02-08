@@ -9,8 +9,27 @@ const app = express();
 const prisma = new PrismaClient();
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Nur diese Domain darf zugreifen (Frontend)
+}));
 app.use(express.json());
+
+// Middleware für die Authentifizierung (JWT)
+const authMiddleware = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Kein Token vorhanden' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded.userId;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Ungültiges Token' });
+  }
+};
 
 // API-Endpunkte
 
@@ -55,12 +74,26 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Lieferscheine hochladen (Beispiel - Implementierung unvollständig)
-app.post('/api/lieferscheine', async (req, res) => {
+// Benutzerdaten abrufen (geschützt)
+app.get('/api/auth/me', authMiddleware, async (req, res) => {
   try {
-    // Hier muss die Logik zum Hochladen der Datei (z.B. mit multer) implementiert werden.
-    // Ebenso die Logik zum Extrahieren der Daten aus dem Lieferschein (z.B. mit OCR).
-    // Und schließlich die Logik zum Speichern der Daten in der Datenbank (mit Prisma).
+    const user = await prisma.user.findUnique({ where: { id: req.user } });
+    if (!user) {
+      return res.status(404).json({ error: 'Benutzer nicht gefunden' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Fehler beim Abrufen der Benutzerdaten:', error);
+    res.status(500).json({ error: 'Ein Fehler ist aufgetreten' });
+  }
+});
+
+// Lieferscheine hochladen (Platzhalter)
+app.post('/api/lieferscheine', authMiddleware, async (req, res) => {
+  try {
+    // 1. Datei hochladen (z.B. mit multer)
+    // 2. OCR-Verarbeitung (z.B. mit Tesseract)
+    // 3. Daten in die Datenbank speichern (mit Prisma)
 
     res.status(201).json({ message: 'Lieferschein erfolgreich hochgeladen' });
   } catch (error) {
@@ -69,18 +102,20 @@ app.post('/api/lieferscheine', async (req, res) => {
   }
 });
 
-// Lieferscheine abrufen (Beispiel - Implementierung unvollständig)
-app.get('/api/lieferscheine', async (req, res) => {
-    try {
-      // Hier muss die Logik zum Abrufen der Lieferscheine aus der Datenbank (mit Prisma) implementiert werden.
-  
-      res.json([]); // Leeres Array als Platzhalter
-    } catch (error) {
-      console.error('Fehler beim Abrufen der Lieferscheine:', error);
-      res.status(500).json({ error: 'Ein Fehler ist aufgetreten' });
-    }
-  });
+// Lieferscheine abrufen (Platzhalter)
+app.get('/api/lieferscheine', authMiddleware, async (req, res) => {
+  try {
+    const lieferscheine = await prisma.lieferschein.findMany({
+      where: { userId: req.user }, // Nur die Lieferscheine des aktuellen Benutzers
+    });
+    res.json(lieferscheine);
+  } catch (error) {
+    console.error('Fehler beim Abrufen der Lieferscheine:', error);
+    res.status(500).json({ error: 'Ein Fehler ist aufgetreten' });
+  }
+});
 
+// Server starten
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server läuft unter http://localhost:${port}`);
 });
