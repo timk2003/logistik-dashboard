@@ -1,6 +1,3 @@
-Klar, hier ist ein Entwurf für eine `README.md`-Datei, die du schnell anpassen kannst:
-
-```markdown
 # Logistik-Dashboard
 
 Ein React-basiertes Dashboard zur Verwaltung und Visualisierung von Logistikdaten, insbesondere Lieferscheinen.
