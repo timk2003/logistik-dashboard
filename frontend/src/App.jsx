@@ -1,15 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Falls du React Router verwendest
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
-import Dashboard from './components/Dashboard'; // Beispiel-Dashboard-Komponente
+import Dashboard from './components/Dashboard';
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/dashboard" element={<Dashboard />} /> {/* Geschützte Route */}
-        {/* ... andere Routen ... */}
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
