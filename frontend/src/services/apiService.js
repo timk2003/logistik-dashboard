@@ -38,8 +38,17 @@ const apiService = {
       throw error;
     }
   },
+ 
+  async healthCheck() {
+    try {
+      const response = await axios.get(`${API_URL}/health`);
+      return console.log('Health-Check erfolgreich:', response.data);
+    } catch (error) {
+      console.error('Fehler beim Health-Check:', error);
+      throw error;
+    }
+  }
 
-  // Weitere API-Funktionen hinzufügen...
 };
 
 export default apiService;

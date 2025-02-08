@@ -10,8 +10,9 @@ const prisma = new PrismaClient();
 const port = process.env.PORT || 3001;
 
 app.use(cors({
-  origin: 'http://localhost:5173', // Nur diese Domain darf zugreifen (Frontend)
+  origin: 'http://localhost:5173' // Erlaubt Anfragen von deinem Frontend
 }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Middleware für die Authentifizierung (JWT)
@@ -115,7 +116,29 @@ app.get('/api/lieferscheine', authMiddleware, async (req, res) => {
   }
 });
 
+// Verbindung zur Datenbank aufbauen und überprüfen
+prisma.$connect()
+  .then(() => {
+    console.log('✅ Verbindung zur Datenbank erfolgreich hergestellt!');
+  })
+  .catch((error) => {
+    console.error('❌ Fehler beim Verbindungsaufbau zur Datenbank:', error);
+  });
+
+// Health-Check-Endpunkt
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ message: 'Backend ist online!' });
+});
+
+
 // Server starten
 app.listen(port, () => {
-  console.log(`Server läuft unter http://localhost:${port}`);
+  console.log(`
+  ------------------------------
+   --- 🚚 Logistic App ---      
+      v1.0.0 by Tim Krisch    
+  ------------------------------
+   🚀 Backend wird gestartet...   
+  `);
+  console.log(`✅ Backend läuft auf Port: ${port}`);
 });
